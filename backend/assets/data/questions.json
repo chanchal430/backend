@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "question": "Guess The Game?",
+    "images": ["temple.svg", "run.svg"],
+    "options": ["Subway Surfer", "Temple Run", "Happy Run"],
+    "correct_answer": "Temple Run",
+    "hint": "An endless runner set in ancient temples!"
+  },
+  {
+    "id": 2,
+    "question": "Guess The Animal?",
+    "images": ["bamboo.svg", "bear.svg"],
+    "options": ["Koala", "Panda", "Sloth"],
+    "correct_answer": "Panda",
+    "hint": "Loves to eat bamboo!"
+  },
+  {
+    "id": 3,
+    "question": "Guess The Country?",
+    "images": ["eiffel.svg", "flag.svg"],
+    "options": ["France", "Italy", "Germany"],
+    "correct_answer": "France",
+    "hint": "Home to the Eiffel Tower!"
+  },
+  {
+    "id": 4,
+    "question": "Guess The Sport?",
+    "images": ["bat.svg", "ball.svg"],
+    "options": ["Baseball", "Cricket", "Tennis"],
+    "correct_answer": "Cricket",
+    "hint": "Popular in India, Australia, and England!"
+  },
+  {
+    "id": 5,
+    "question": "Guess The Movie?",
+    "images": ["wizard.svg", "glasses.svg"],
+    "options": ["Harry Potter", "The Hobbit", "Lord of the Rings"],
+    "correct_answer": "Harry Potter",
+    "hint": "A young wizard with a scar!"
+  },
+  {
+    "id": 6,
+    "question": "Guess The Cartoon Character?",
+    "images": ["mouse.svg", "ears.svg"],
+    "options": ["Mickey Mouse", "Jerry", "Donald Duck"],
+    "correct_answer": "Mickey Mouse",
+    "hint": "The face of Disney!"
+  },
+  {
+    "id": 7,
+    "question": "Guess The Car Brand?",
+    "images": ["bull.svg", "car.svg"],
+    "options": ["Ferrari", "Lamborghini", "Bugatti"],
+    "correct_answer": "Lamborghini",
+    "hint": "Its logo features a raging bull!"
+  },
+  {
+    "id": 8,
+    "question": "Guess The Superhero?",
+    "images": ["shield.svg", "star.svg"],
+    "options": ["Iron Man", "Thor", "Captain America"],
+    "correct_answer": "Captain America",
+    "hint": "Uses a shield with a star!"
+  },
+  {
+    "id": 9,
+    "question": "Guess The Scientist?",
+    "images": ["time.svg", "scientist.svg"],
+    "options": ["Isaac Newton", "Albert Einstein", "Nikola Tesla"],
+    "correct_answer": "Albert Einstein",
+    "hint": "Famous for the theory of relativity!"
+  },
+  {
+    "id": 10,
+    "question": "Guess The Element?",
+    "images": ["diamond.svg", "pencils.svg"],
+    "options": ["Carbon", "Silicon", "Boron"],
+    "correct_answer": "Carbon",
+    "hint": "Exists in forms like diamond and graphite!"
+  },
+  {
+    "id": 11,
+    "question": "Guess The Mathematician?",
+    "images": ["infinity.svg", "partition.svg"],
+    "options": ["Euclid", "Ramanujan", "Gauss"],
+    "correct_answer": "Ramanujan",
+    "hint": "Known for infinite series and partitions!"
+  },
+  {
+    "id": 12,
+    "question": "Guess The Historical Figure?",
+    "images": ["non-violence.svg", "glasses.svg"],
+    "options": ["Nelson Mandela", "Mahatma Gandhi", "Martin Luther King Jr."],
+    "correct_answer": "Mahatma Gandhi",
+    "hint": "Led India's non-violent independence movement!"
+  },
+  {
+    "id": 13,
+    "question": "Guess The Constellation?",
+    "images": ["hunter.svg", "stars.svg"],
+    "options": ["Orion", "Ursa Major", "Cassiopeia"],
+    "correct_answer": "Orion",
+    "hint": "Recognized by its three-star belt!"
+  },
+  {
+    "id": 14,
+    "question": "Guess The Philosopher?",
+    "images": ["cave.svg", "shadows.svg"],
+    "options": ["Aristotle", "Socrates", "Plato"],
+    "correct_answer": "Plato",
+    "hint": "Famous for the Allegory of the Cave!"
+  },
+  {
+    "id": 15,
+    "question": "Guess The Country?",
+    "images": ["fjords.svg", "viking.svg"],
+    "options": ["Norway", "Sweden", "Denmark"],
+    "correct_answer": "Norway",
+    "hint": "Known for stunning fjords and Viking history!"
+  },
+  {
+    "id": 16,
+    "question": "Guess The Programming Paradigm?",
+    "images": ["object.svg", "methods.svg"],
+    "options": ["Functional", "Object-Oriented", "Procedural"],
+    "correct_answer": "Object-Oriented",
+    "hint": "Uses concepts like classes and inheritance!"
+  },
+  {
+    "id": 17,
+    "question": "Guess The Scientist?",
+    "images": ["electricity.svg", "coil.svg"],
+    "options": ["Nikola Tesla", "Michael Faraday", "Thomas Edison"],
+    "correct_answer": "Nikola Tesla",
+    "hint": "Invented the Tesla coil and worked on AC electricity!"
+  },
+  {
+    "id": 18,
+    "question": "Guess The Mythological Creature?",
+    "images": ["wings.svg", "fire.svg"],
+    "options": ["Griffin", "Dragon", "Phoenix"],
+    "correct_answer": "Dragon",
+    "hint": "Often depicted as a fire-breathing beast!"
+  },
+  {
+    "id": 19,
+    "question": "Guess The Physics Concept?",
+    "images": ["cat.svg", "box.svg"],
+    "options": ["Quantum Entanglement", "Schrödinger's Cat", "Wave-Particle Duality"],
+    "correct_answer": "Schrödinger's Cat",
+    "hint": "A thought experiment involving a cat that is both alive and dead!"
+  },
+  {
+    "id": 20,
+    "question": "Guess The Unsolved Mystery?",
+    "images": ["alien.svg", "pyramid.svg"],
+    "options": ["Bermuda Triangle", "Ancient Aliens", "Voynich Manuscript"],
+    "correct_answer": "Voynich Manuscript",
+    "hint": "A book written in an unknown language, still undeciphered!"
+  }
+]

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="shadows">
+  <path fill="#2d4356" d="M127.9,63.36A2.01359,2.01359,0,0,0,126,62H78V26a2.00587,2.00587,0,0,0-2-2H2a2.00587,2.00587,0,0,0-2,2v76a2.00591,2.00591,0,0,0,2,2H76a2.02918,2.02918,0,0,0,1.21-.41l50-38A2.01491,2.01491,0,0,0,127.9,63.36ZM74,100H4V28H74Zm10-6.59-6,4.56V66h6Zm10-7.6-6,4.56V66h6Zm10-7.6-6,4.56V66h6Zm4-3.04V66h12.06Z"></path>
+  <polygon fill="#d68751" points="120.06 66 108 75.17 108 66 120.06 66"></polygon>
+  <polygon fill="#d68751" points="104 66 104 78.21 98 82.77 98 66 104 66"></polygon>
+  <polygon fill="#d68751" points="94 66 94 85.81 88 90.37 88 66 94 66"></polygon>
+  <polygon fill="#d68751" points="84 66 84 93.41 78 97.97 78 66 84 66"></polygon>
+  <path fill="#fc785e" d="M4,28v72H74V28ZM70,94a2.00591,2.00591,0,0,1-2,2H10a2.00591,2.00591,0,0,1-2-2V34a2.00587,2.00587,0,0,1,2-2H68a2.00587,2.00587,0,0,1,2,2Z"></path>
+  <path fill="#2d4356" d="M68,32H10a2.00587,2.00587,0,0,0-2,2V94a2.00591,2.00591,0,0,0,2,2H68a2.00591,2.00591,0,0,0,2-2V34A2.00587,2.00587,0,0,0,68,32ZM66,92H12V36H66Z"></path>
+  <rect width="54" height="56" x="12" y="36" fill="#e1ebf4"></rect>
+  <polygon fill="#e5d0c3" points="120.06 66 117.43 68 108 68 108 66 120.06 66" opacity=".3"></polygon>
+  <rect width="6" height="2" x="98" y="66" fill="#e5d0c3" opacity=".3"></rect>
+  <rect width="6" height="2" x="88" y="66" fill="#e5d0c3" opacity=".3"></rect>
+  <rect width="6" height="2" x="78" y="66" fill="#e5d0c3" opacity=".3"></rect>
+  <rect width="70" height="2" x="4" y="28" fill="#f9dbd7" opacity=".3"></rect>
+  <rect width="70" height="2" x="4" y="98" fill="#a54b3f" opacity=".5"></rect>
+  <rect width="54" height="2" x="12" y="36" fill="#fff" opacity=".5"></rect>
+  <rect width="54" height="2" x="12" y="90" fill="#9fa5aa" opacity=".5"></rect>
+</svg>
