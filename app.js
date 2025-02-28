@@ -3,7 +3,7 @@ const connectToMongo = require("./config/db");
 var cors = require("cors");
 const path = require("path");
 const express = require("express");
-const { spawn } = require("child_process"); // Import spawn to run abot.js
+const { spawn } = require("child_process"); 
 
 connectToMongo();
 const app = express();

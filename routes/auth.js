@@ -12,6 +12,64 @@ const { message } = require("telegraf/filters");
 
 // API to connect wallet and create a user with empty fields
 
+// Route: POST /api/save-telegram-id
+router.post("/save-telegram-id", async (req, res) => {
+  const { telegramUserId } = req.body;
+
+  if (!telegramUserId) {
+    return res.status(400).json({ error: "Telegram user ID is required" });
+  }
+
+  try {
+    let user;
+
+    // if (walletAddress) {
+    //   user = await User.findOne({ walletAddress });
+
+    //   if (!user) {
+    //     return res.status(404).json({ error: "User not found" });
+    //   }
+    // } else {
+    // Optionally handle creating or finding a user based only on telegramUserId
+    user = await User.findOne({ telegramUserId });
+
+    if (!user) {
+      // Create new user if doesn't exist (optional logic)
+      // user = new User({ telegramUserId });
+      user = new User({
+        telegramUserId,
+        walletAddress: undefined,
+        firstName: "",
+        lastName: "",
+        email: undefined,
+        taskPoints: 0,
+        tapPoints: 0,
+        gamePoints: 0,
+        totalPoints: 0,
+      });
+      // }
+      await user.save();
+
+      return res.status(200).json({
+        message: "Telegram user ID successfully saved",
+        // telegramUserId: user.telegramUserId,
+        user,
+      });
+    }
+
+    // Update Telegram User ID
+    // user.telegramUserId = telegramUserId;
+    return res.json({
+      success: true,
+      message: "User With this Telegram ID already exist",
+      user,
+    });
+  } catch (error) {
+    console.error("Error saving Telegram ID:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.post(
   "/connectWallet",
   [
@@ -34,7 +92,7 @@ router.post(
         return res.json({
           success: true,
           message: "User With this Wallet Address already exist",
-          user
+          user,
         });
       }
 
@@ -52,7 +110,11 @@ router.post(
 
       await user.save();
 
-      return res.json({ success: true, message: "User Created Successfully", user });
+      return res.json({
+        success: true,
+        message: "User Created Successfully",
+        user,
+      });
 
       // res.json({ success: true, user });
     } catch (error) {
@@ -66,7 +128,8 @@ router.post(
 router.put(
   "/updateUser",
   [
-    body("walletAddress", "Not A Valid Address").isLength({ min: 40 }),
+    // body("walletAddress", "Not A Valid Address").isLength({ min: 40 }),
+    body("telegramUserId", "Not A Valid Telegram ID").isLength({ min: 3 }),
     body("firstName").optional().isString().trim(),
     body("lastName").optional().isString().trim(),
     body("email").optional().isEmail().trim(),
@@ -80,10 +143,11 @@ router.put(
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { walletAddress, firstName, lastName, email } = req.body;
+      // const { walletAddress, firstName, lastName, email } = req.body;
+      const { telegramUserId, firstName, lastName, email } = req.body;
 
       // Find user by wallet address
-      let user = await User.findOne({ walletAddress });
+      let user = await User.findOne({ telegramUserId });
 
       if (!user) {
         return res.status(404).json({
@@ -93,10 +157,16 @@ router.put(
       }
 
       // Ensure wallet address remains unchanged
-      if (user.walletAddress !== walletAddress) {
+      // if (user.walletAddress !== walletAddress) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     error: "Wallet address cannot be changed",
+      //   });
+      // }
+      if (user.telegramUserId !== telegramUserId) {
         return res.status(400).json({
           success: false,
-          error: "Wallet address cannot be changed",
+          error: "Telegram ID cannot be changed",
         });
       }
 
@@ -177,16 +247,15 @@ router.post(
 // Fetch All Games (Only for Logged-In Users)
 router.get("/getQuestions", fetchuser, async (req, res) => {
   try {
-    let user = req.user; // ✅ Get user from middleware
+    let user = req.user;
 
-    // ✅ Construct the correct path
     const questionsFilePath = path.join(
       __dirname,
       "../assets/data/questions.json"
     );
     // console.log("questionsFilePath ===>", questionsFilePath);
 
-    // ✅ Check if file exists before reading
+    //Check if file exists before reading
     if (!fs.existsSync(questionsFilePath)) {
       console.error("Error: File not found -", questionsFilePath);
       return res
@@ -194,18 +263,18 @@ router.get("/getQuestions", fetchuser, async (req, res) => {
         .json({ success: false, error: "Questions file not found" });
     }
 
-    // ✅ Read JSON file safely
+    //Read JSON file safely
     let questions = JSON.parse(fs.readFileSync(questionsFilePath, "utf-8"));
 
-    // ✅ Get today's date (YYYY-MM-DD)
+    //Get today's date (YYYY-MM-DD)
     const today = new Date().toISOString().split("T")[0];
 
-    // ✅ Initialize game history if not present
+    //Initialize game history if not present
     if (!user.gameHistory) {
       user.gameHistory = [];
     }
 
-    // ✅ Add `played` flag (true if played today, false otherwise)
+    //Add `played` flag (true if played today, false otherwise)
     questions = questions.map((question, index) => {
       const gameId = index + 1;
       const gamePlayed = user.gameHistory.some(
@@ -217,7 +286,7 @@ router.get("/getQuestions", fetchuser, async (req, res) => {
         images: question.images.map(
           (img) => `${req.protocol}://${req.get("host")}/assets/images/${img}`
         ),
-        played: gamePlayed, // ✅ Indicates if the game was already played today
+        played: gamePlayed, //Indicates if the game was already played today
       };
     });
 
@@ -247,14 +316,13 @@ router.post(
       const { gameId, gameCoins } = req.body;
       let user = req.user;
 
-      // ✅ Load game data from JSON file
+      //Load game data from JSON file
       const gamesFilePath = path.join(
         __dirname,
         "../assets/data/questions.json"
       );
       const gamesData = JSON.parse(fs.readFileSync(gamesFilePath, "utf-8"));
-
-      // ✅ Validate game ID
+      //Validate game ID
       const game = gamesData.find((g) => g.id === gameId);
       if (!game) {
         return res
@@ -262,7 +330,7 @@ router.post(
           .json({ success: false, error: "Invalid game ID" });
       }
 
-      // ✅ Get current date in YYYY-MM-DD format
+      // Get current date in YYYY-MM-DD format
       const now = new Date();
       const today = now.toISOString().split("T")[0]; // e.g., "2025-02-11"
       const lastReset = user.lastResetDate
@@ -272,13 +340,13 @@ router.post(
         ? lastReset.toISOString().split("T")[0]
         : null;
 
-      // ✅ Reset game history if a new day has started
+      // Reset game history if a new day has started
       if (!lastReset || lastResetDate !== today) {
         user.gameHistory = []; // Reset game history
-        user.lastResetDate = now; // ✅ Update last reset date with current timestamp
+        user.lastResetDate = now; // Update last reset date with current timestamp
       }
 
-      // ✅ Check if the user has already played this game today
+      // Check if the user has already played this game today
       const hasPlayedToday = user.gameHistory.some(
         (entry) => entry.gameId === gameId && entry.date === today
       );
@@ -290,13 +358,13 @@ router.post(
         });
       }
 
-      // ✅ Add game to history
+      //Add game to history
       user.gameHistory.push({ gameId, date: today, played: true });
 
-      // ✅ Increment game points
+      //Increment game points
       user.gamePoints += gameCoins;
 
-      // ✅ Update total points
+      //Update total points
       user.totalPoints = user.taskPoints + user.tapPoints + user.gamePoints;
 
       await user.save();
@@ -314,18 +382,19 @@ router.post(
 router.post("/invite", fetchuser, async (req, res) => {
   try {
     // Validate user object from middleware
-    if (!req.user || !req.user.walletAddress) {
+    if (!req.user || !req.user.telegramUserId) {
       return res.status(400).json({
         success: false,
-        error: "Invalid user. Wallet address is required",
+        error: "Invalid User. Telegram ID is required",
       });
     }
 
-    const walletAddress = req.user.walletAddress; // Extract wallet address
+    // const walletAddress = req.user.walletAddress; // Extract wallet address
+    const telegramUserId = req.user.telegramUserId;
     // console.log("Wallet Address:", walletAddress);
 
     // Find the user by wallet address and get their referral ID
-    const user = await User.findOne({ walletAddress });
+    const user = await User.findOne({ telegramUserId });
 
     if (!user || !user._id) {
       return res.status(404).json({
@@ -375,8 +444,11 @@ router.get("/user", fetchuser, async (req, res) => {
     // }
 
     // Find user by wallet address and exclude sensitive fields like password
+    // const user = await User.findOne({
+    //   walletAddress: req.user.walletAddress,
+    // });
     const user = await User.findOne({
-      walletAddress: req.user.walletAddress,
+      telegramUserId: req.user.telegramUserId,
     });
 
     if (!user) {

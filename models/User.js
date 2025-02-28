@@ -4,9 +4,13 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   walletAddress: {
     type: String,
-    required: true,
+    // required: true,
     unique: true,
+    default: null,
+    sparse: true,
   },
+
+  telegramUserId: { type: String, required: true, unique: true },
 
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
