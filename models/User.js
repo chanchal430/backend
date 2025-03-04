@@ -3,14 +3,12 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   walletAddress: {
     type: String,
-    unique: true
   },
   telegramUserId: { type: String, required: true, unique: true },
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
   email: {
     type: String,
-    unique: true
   },
   taskPoints: { type: Number, default: 0 },
   tapPoints: { type: Number, default: 0 },

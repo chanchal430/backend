@@ -79,7 +79,7 @@ router.post(
         walletAddress,
         firstName: "",
         lastName: "",
-        email: undefined,
+        email: "",
         taskPoints: 0,
         tapPoints: 0,
         gamePoints: 0,
