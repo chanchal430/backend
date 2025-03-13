@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" id="pyramid" x="0" y="0" enable-background="new 0 0 512 512" version="1.1" viewBox="0 0 512 512">
+  <g>
+    <g>
+      <polygon fill="#41B3E2" points="308.7 134.6 256 48.5 203.3 134.6"></polygon>
+    </g>
+    <g>
+      <polygon fill="#FDC77C" points="185.8 163.2 137.7 241.7 374.3 241.7 326.2 163.2"></polygon>
+    </g>
+    <g>
+      <polygon fill="#5AC8AE" points="439.8 348.8 391.7 270.3 120.3 270.3 72.2 348.8"></polygon>
+    </g>
+    <g>
+      <polygon fill="#F1786B" points="54.7 377.4 2 463.5 510 463.5 457.3 377.4"></polygon>
+    </g>
+    <g>
+      <polygon fill="#5CD2F7" points="267.8 67.8 256 48.5 244.2 67.8"></polygon>
+    </g>
+    <g>
+      <polygon fill="#FBD984" points="332.5 173.5 326.2 163.2 185.8 163.2 179.5 173.5"></polygon>
+    </g>
+    <g>
+      <polygon fill="#73D8BE" points="400.3 284.3 391.7 270.3 120.3 270.3 111.7 284.3"></polygon>
+    </g>
+    <g>
+      <polygon fill="#FC9088" points="466.9 393 457.3 377.4 54.7 377.4 45.1 393"></polygon>
+    </g>
+  </g>
+</svg>
