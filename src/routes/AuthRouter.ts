@@ -1,30 +1,20 @@
 import { Router } from 'express';
-import { AuthComponent } from '../components';
-import { isAuthenticated } from '../config/middleware/jwtAuth';
+import { saveTelegramId, updateUser, getUser } from '../components/Auth/controllers/user.controller';
+import { updateTapPoints, saveGamePoints } from '../components/Auth/controllers/game.controller';
+import { getQuestions } from '../components/Auth/controllers/quiz.controller';
+import { invite } from '../components/Auth/controllers/invite.controller';
+import { tasks, completeTask } from '../components/Auth/controllers/task.controller';
 
-/**
- * @constant {express.Router}
- */
-const router: Router = Router();
+const router = Router();
 
+router.post('/saveTelegramId', saveTelegramId);
+router.post('/updateUser', updateUser);
+router.post('/getUser', getUser);
+router.post('/updateTapPoints', updateTapPoints);
+router.post('/saveGamePoints', saveGamePoints);
+router.post('/getQuestions', getQuestions);
+router.post('/invite', invite);
+router.post('/tasks', tasks);
+router.post('/completeTask', completeTask);
 
-
-router.post('/save-telegram-id', AuthComponent.saveTelegramId);
-router.post('/saveGamePoints', isAuthenticated, AuthComponent.saveGamePoints);
-router.post('/invite',isAuthenticated ,AuthComponent.invite);
-router.post('/completeTask', isAuthenticated,AuthComponent.completeTask);
-router.post('/updateTapPoints', isAuthenticated, AuthComponent.updateTapPoints);
-
-
-router.put('/updateUser', isAuthenticated, AuthComponent.updateUser);
-
-
-router.get('/getQuestions', isAuthenticated, AuthComponent.getQuestions);
-router.get('/user', isAuthenticated,AuthComponent.user);
-router.get('/tasks',isAuthenticated ,AuthComponent.tasks);
-
-
-/**
- * @export {express.Router}
- */
 export default router;
