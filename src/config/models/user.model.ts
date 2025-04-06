@@ -1,8 +1,6 @@
 import { Document, Schema } from 'mongoose';
 import * as connections from '../connection/connection';
 
-
-
 /**
  * @export
  * @interface IUserModel

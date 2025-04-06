@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as Middleware from '../middleware/middleware';
 import * as Routes from '../../routes';
-import botHelper from "../helpers/tgbot.helper";
+// import botHelper from "../helpers/tgbot.helper";
 /**
  * @constant {express.Application}
  */
@@ -35,7 +35,7 @@ app.set('secret', process.env.SECRET || 'superSecret');
 /**
  * starts telegram bot helper 
  */
-botHelper.start();
+// botHelper.start();
 /**
  * @exports {express.Application}
  */

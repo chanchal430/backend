@@ -14,14 +14,14 @@ const GameService: IGameService = {
         if (error) throw new Error(error.message);
 
         const { gameId, gameCoins } = value;
-        const games = readJSON(path.join(__dirname, '../assets/data/questions.json'));
+        const games = readJSON(path.join(__dirname, '../../../../assets/data/questions.json'));
         if (!games.find((g: any) => g.id === gameId)) return 0;
 
         const today = getToday();
-        const lastResetDate = user.lastResetDate?.toISOString().split('T')[0];
+        const lastResetDate = new Date(user.lastResetDate).toISOString().split('T')[0];
         if (!user.lastResetDate || lastResetDate !== today) {
             user.gameHistory = [];
-            user.lastResetDate = new Date();
+            user.lastResetDate = Date.now();
         }
 
         if (user.gameHistory.some((entry: any) => entry.gameId === gameId && entry.date === today)) return 0;
@@ -58,7 +58,6 @@ const GameService: IGameService = {
         await user.save();
         return 1;
     },
-
 
 }
 
