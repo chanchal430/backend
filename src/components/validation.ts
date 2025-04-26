@@ -1,13 +1,18 @@
 import * as Joi from 'joi';
 import { Types } from 'mongoose';
 
+
+interface CustomJoi extends Joi.Root {
+    objectId(): Joi.StringSchema;
+  }
+
 /**
  * @export
  * @class Validation
  */
 abstract class Validation {
     // can`t assign to customJoi any type of Joi Schemas - because of custom field objectId. Need to discuss this
-    customJoi: any;
+    customJoi: CustomJoi;
 
     /**
      * @static
@@ -25,7 +30,7 @@ abstract class Validation {
             type: 'objectId',
             base: joi.string(),
             validate(
-                value: any,
+                value: string,
                 helpers: Joi.CustomHelpers,
             ): Object | string {
                 if (!Types.ObjectId.isValid(value)) {
