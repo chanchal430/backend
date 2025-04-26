@@ -1,3 +1,19 @@
+import { IUserModel } from "../../config/models/user.model";
+
+
+
+interface TaskCompletion {
+    taskId: number;
+    completed: boolean;
+    completedAt: Date | null;
+  }
+  
+  interface GameHistoryEntry {
+    gameId: number;
+    date: string;
+    played: boolean;
+  }
+
 export interface IUserService {
     
     /**
@@ -5,21 +21,21 @@ export interface IUserService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    saveTelegramId(body: any): Promise<any>;
+    saveTelegramId(body: { telegramId: string }): Promise<IUserModel>;
 
     /**
      * @param {IUserModel} userModel
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    updateUser(body: any,user:any): Promise<any>;
+    updateUser(body: Partial<IUserModel>, user: IUserModel): Promise<IUserModel>;
 
     /**
      * @param {IUserModel} userModel
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    user(body: any,user:any): Promise<any>;
+    user(body: Record<string, unknown>, user: IUserModel): Promise<IUserModel>;
 
 }
 
@@ -29,7 +45,7 @@ export interface IGameService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    saveGamePoints(body: any,user:any): Promise<any>;
+    saveGamePoints(body: { gamePoints: number }, user: IUserModel): Promise<IUserModel>;
 
 
     /**
@@ -37,8 +53,7 @@ export interface IGameService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    updateTapPoints(body: any,user:any): Promise<any>;
-
+    updateTapPoints(body: { tapPoints: number }, user: IUserModel): Promise<IUserModel>;
 
 }
 
@@ -48,7 +63,7 @@ export interface IInviteService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    invite(body: any,user:any): Promise<any>;
+    invite(body: { recipient: string }, user: IUserModel): Promise<IUserModel>;
 }
 
 export interface IQuizService {
@@ -57,7 +72,11 @@ export interface IQuizService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    getQuestions(body: any,user:any,host:any): Promise<any>;
+    getQuestions(
+        body: { category?: string },
+        user: IUserModel,
+        host: { id: string; name: string }
+      ): Promise<Array<{ question: string; options: string[] }>>;
 }
 
 export interface ITaskService {
@@ -66,12 +85,19 @@ export interface ITaskService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    completeTask(body: any,user:any): Promise<any>;
+    completeTask(body: { taskId: number }, user: IUserModel): Promise<IUserModel>;
 
     /**
      * @param {IUserModel} userModel
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    tasks(body: any,user:any): Promise<any>;
+    tasks(
+        body: { frequency?: 'daily' | 'weekly' | 'monthly' },
+        user: IUserModel
+      ): Promise<{
+        daily: TaskCompletion[];
+        weekly: TaskCompletion[];
+        monthly: TaskCompletion[];
+      }>;
 }

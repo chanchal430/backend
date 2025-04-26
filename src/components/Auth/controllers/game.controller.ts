@@ -3,43 +3,63 @@ import AuthService from '../services';
 import { sendResponse, handleError } from '../../../helpers/response.helper'
 import userModel from '../../../config/models/user.model';
 
-export async function updateTapPoints(req: any, res: Response, next: NextFunction) {
+interface AuthenticatedRequest extends Request {
+  user: {
+    telegramUserId: string;
+  };
+}
+
+export async function updateTapPoints(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     const user = await userModel.findOne({ telegramUserId: req.user.telegramUserId });
 
     if (!user) {
-      return sendResponse(res, 404, 'User not found', null, true);
+      sendResponse(res, 404, 'User not found', null, true);
+      return;
     }
 
-    const result = await AuthService.updateTapPoints(req.body, user);
+    // Validate and type cast the request body
+    const tapPoints = Number(req.body.tapPoints) || 0;
+    const updateResult = await AuthService.updateTapPoints({ tapPoints }, user);
 
     sendResponse(
       res,
-      result === 1 ? 200 : 400,
-      result === 1 ? 'User Tap points updated successfully' : 'Bad Request',
+      updateResult ? 200 : 400,
+      updateResult ? 'Tap points updated successfully' : 'Update failed',
       null,
-      result !== 1
+      !updateResult
     );
   } catch (error) {
     handleError(error, res, next);
   }
 }
 
-export async function saveGamePoints(req: any, res: Response, next: NextFunction) {
+export async function saveGamePoints(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     const user = await userModel.findOne({ telegramUserId: req.user.telegramUserId });
 
     if (!user) {
-      return sendResponse(res, 404, 'User not found', null, true);
+      sendResponse(res, 404, 'User not found', null, true);
+      return;
     }
 
-    const result = await AuthService.saveGamePoints(req.body, user);
+    const gamePoints = Number(req.body.gamePoints) || 0;
+    const updateResult = await AuthService.saveGamePoints({ gamePoints }, user);
+
     sendResponse(
       res,
-      result === 1 ? 200 : 400,
-      result === 1 ? 'User game points saved successfully' : 'Bad Request',
+      updateResult ? 200 : 400,
+      updateResult ? 'Game points saved successfully' : 'Save failed',
       null,
-      result !== 1
+      !updateResult
     );
   } catch (error) {
     handleError(error, res, next);
