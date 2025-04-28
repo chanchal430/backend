@@ -1,13 +1,19 @@
 import { IInviteService } from "../interface";
-import UserModel from '../../../config/models/user.model'
+import UserModel, { IUserModel } from '../../../config/models/user.model';
 
 const InviteService: IInviteService = {
-
-    async invite(_, user) {
+    async invite(body: { recipient: string }, user: IUserModel) {
         const usr = await UserModel.findOne({ telegramUserId: user.telegramUserId });
-        if (!usr || !usr._id) return 0;
-        return { success: true, referralId: usr._id };
+        if (!usr || !usr._id) {
+            return { 
+                success: false 
+            };
+        }
+        return { 
+            success: true, 
+            referralId: usr._id.toString()
+        };
     },
-}
+};
 
 export default InviteService;

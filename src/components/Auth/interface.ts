@@ -63,7 +63,7 @@ export interface IInviteService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    invite(body: { recipient: string }, user: IUserModel): Promise<IUserModel>;
+    invite(body: { recipient: string }, user: IUserModel):  Promise<{ success: boolean; referralId?: string }>;
 }
 
 export interface IQuizService {
