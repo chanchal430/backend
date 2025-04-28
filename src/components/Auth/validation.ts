@@ -124,16 +124,11 @@ class AuthValidation extends Validation {
      * @returns {Joi.ValidationResult}
      * @memberof UserValidation
      */
-    getQuestions(
-        params: IUserModel,
-    ): Joi.ValidationResult {
-        const schema: Joi.Schema = Joi.object().keys({
-            
-        });
-
-        return schema.validate(params);
-    }
-
+     getQuestions = {
+        params: Joi.object({
+          category: Joi.string().valid('general', 'crypto', 'technology').required()
+        })
+      };
 
 
     /**

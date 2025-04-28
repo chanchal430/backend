@@ -73,10 +73,23 @@ export interface IQuizService {
      * @memberof AuthService
      */
     getQuestions(
-        body: { category?: string },
-        user: IUserModel,
-        host: { id: string; name: string }
-      ): Promise<Array<{ question: string; options: string[] }>>;
+      body: { category: string },
+      user: IUserModel,
+      host: string
+    ): Promise<{
+      success: boolean;
+      questions?: ProcessedQuestion[];
+    }>;  
+}
+
+
+export interface ProcessedQuestion {
+  id: string;
+  text: string;
+  options: string[];
+  correctAnswer: string;
+  images: string[];
+  played: boolean;
 }
 
 export interface ITaskService {
