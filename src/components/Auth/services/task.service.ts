@@ -1,26 +1,38 @@
 import { ITaskService } from "../interface";
 import AuthValidation from '../validation';
-import UserModel from '../../../config/models/user.model';
+import UserModel, { CompletedTask } from '../../../config/models/user.model';
+import { IUserModel } from "../../../config/models/user.model";
 
-const RESET_INTERVALS = {
-  daily: 86400000,
-  weekly: 604800000,
-  monthly: 2592000000,
-} as const;
 
-type TaskType = keyof typeof RESET_INTERVALS;
-
+type TaskType = 'daily' | 'weekly' | 'monthly';
 type ResetField = 'lastDailyReset' | 'lastWeeklyReset' | 'lastMonthlyReset';
 type CompletedField = 'completedDailyTasks' | 'completedWeeklyTasks' | 'completedMonthlyTasks';
 
-const defineTasks = (type: TaskType, allTasks: any[], completedTaskIds: number[]) => {
-  return allTasks.map(task => ({
-    ...task,
-    completed: completedTaskIds.includes(task.id),
-  }));
+interface Task {
+  id: number;
+  platform: string;
+  description: string;
+  coins: number;
+  link: string;
+  icon: string;
+}
+
+interface PlatformTask {
+  id: number;
+  platform: string;
+  description: string;
+  coins: number;
+  link: string;
+  icon: string;
+}
+
+const RESET_INTERVALS: Record<TaskType, number> = {
+  daily: 86400000,
+  weekly: 604800000,
+  monthly: 2592000000,
 };
 
-const ALL_TASKS = {
+const ALL_TASKS: Record<TaskType, Task[]> = {
   daily: [
     { id: 1, platform: 'Youtube', description: 'Subscribe', coins: 10, link: 'https://www.youtube.com/', icon: 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png' },
     { id: 2, platform: 'Instagram', description: 'Follow', coins: 20, link: 'https://www.instagram.com/', icon: 'https://cdn-icons-png.flaticon.com/512/174/174855.png' },
@@ -39,12 +51,23 @@ const ALL_TASKS = {
   ],
 };
 
+const defineTasks = (
+  type: TaskType,
+  allTasks: PlatformTask[],
+  completedTasks: CompletedTask[]
+): Array<PlatformTask & { completed: boolean }> => {
+  const completedIds = completedTasks
+    .filter(t => t.completed)
+    .map(t => t.taskId);
+    
+  return allTasks.map(task => ({
+    ...task,
+    completed: completedIds.includes(task.id)
+  }));
+};
+
 const TaskService: ITaskService = {
-
-  async tasks(_, reqUser) {
-    const user = await UserModel.findOne({ telegramUserId: reqUser.telegramUserId });
-    if (!user) throw new Error('User not found');
-
+  async tasks(body: { frequency?: TaskType }, user: IUserModel) {
     const now = Date.now();
     let needsSave = false;
 
@@ -52,12 +75,12 @@ const TaskService: ITaskService = {
       const resetField = `last${type.charAt(0).toUpperCase() + type.slice(1)}Reset` as ResetField;
       const completedField = `completed${type.charAt(0).toUpperCase() + type.slice(1)}Tasks` as CompletedField;
 
-      if (!user[resetField]) user[resetField] = 0;
-      if (!user[completedField]) user[completedField] = [];
+      const currentReset = user[resetField] || 0;
+      const currentCompleted = user[completedField];
 
-      if (now - user[resetField] > RESET_INTERVALS[type]) {
-        user[completedField] = [];
+      if (now - currentReset > RESET_INTERVALS[type]) {
         user[resetField] = now;
+        user[completedField] = [];
         needsSave = true;
       }
     });
@@ -66,49 +89,52 @@ const TaskService: ITaskService = {
 
     return {
       success: true,
-      dailyTasks: defineTasks('daily', ALL_TASKS.daily, user.completedDailyTasks?.map((t: any) => t.taskId) || []),
-      weeklyTasks: defineTasks('weekly', ALL_TASKS.weekly, user.completedWeeklyTasks?.map((t: any) => t.taskId) || []),
-      monthlyTasks: defineTasks('monthly', ALL_TASKS.monthly, user.completedMonthlyTasks?.map((t: any) => t.taskId) || []),
+      dailyTasks: defineTasks('daily', ALL_TASKS.daily, user.completedDailyTasks),
+      weeklyTasks: defineTasks('weekly', ALL_TASKS.weekly, user.completedWeeklyTasks),
+      monthlyTasks: defineTasks('monthly', ALL_TASKS.monthly, user.completedMonthlyTasks)
     };
   },
 
-  async completeTask(body, reqUser) {
+  async completeTask(body: { taskId: number; taskType: string; points: number }, user: IUserModel): Promise<boolean> {
     const { error, value } = AuthValidation.completeTask(body);
     if (error) throw new Error(error.message);
 
-    const user = await UserModel.findOne({ telegramUserId: reqUser.telegramUserId }) as any;
-
-    if (!user) throw new Error('User not found');
-
     const { taskId, taskType, points } = value;
     const type = taskType.replace('Tasks', '').toLowerCase() as TaskType;
-    if (!Object.keys(RESET_INTERVALS).includes(type)) {
+    
+    if (!(type in RESET_INTERVALS)) {
       throw new Error('Invalid task type');
     }
 
-    const now = Date.now();
     const resetField = `last${type.charAt(0).toUpperCase() + type.slice(1)}Reset` as ResetField;
     const completedField = `completed${type.charAt(0).toUpperCase() + type.slice(1)}Tasks` as CompletedField;
 
-    if (!user[resetField]) user[resetField] = 0;
-    if (!user[completedField]) user[completedField] = [];
+    const currentCompleted = user[completedField];
+    const currentReset = user[resetField] || 0;
 
-    if (now - user[resetField] > RESET_INTERVALS[type]) {
+    if (Date.now() - currentReset > RESET_INTERVALS[type]) {
+      user[resetField] = Date.now();
       user[completedField] = [];
-      user[resetField] = now;
     }
 
-    const index = user[completedField].findIndex((task: any) => task.taskId === taskId);
-    if (index !== -1 && user[completedField][index].completed) return 0;
+    const existingTask = currentCompleted.find(t => t.taskId === taskId);
+    if (existingTask?.completed) return false;
 
-    const newTask = { taskId, completed: true, completedAt: now };
-    if (index === -1) user[completedField].push(newTask);
-    else Object.assign(user[completedField][index], newTask);
+    if (existingTask) {
+      existingTask.completed = true;
+      existingTask.completedAt = new Date();
+    } else {
+      currentCompleted.push({ 
+        taskId, 
+        completed: true, 
+        completedAt: new Date() 
+      });
+    }
 
     user.taskPoints += points;
     user.totalPoints = user.taskPoints + user.tapPoints + user.gamePoints;
     await user.save();
-    return 1;
+    return true;
   },
 };
 

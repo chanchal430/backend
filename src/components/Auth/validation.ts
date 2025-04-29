@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 import Validation from '../validation';
 import { IUserModel } from '../../config/models/user.model';
+import { CompleteTaskBody } from './interface';
 
 /**
  * @export
@@ -71,17 +72,18 @@ class AuthValidation extends Validation {
      * @memberof UserValidation
      */
     completeTask(
-        params: IUserModel,
-    ): Joi.ValidationResult {
-        const schema: Joi.Schema = Joi.object().keys({
-            taskId:Joi.number().min(1).required(),
-            taskType:Joi.string().trim().valid('dailyTasks', 'weeklyTasks', 'monthlyTasks').required(),
-            points:Joi.number().min(1).required(),
-        });
-
-        return schema.validate(params);
+        data: unknown
+    ): Joi.ValidationResult<CompleteTaskBody> {
+        const schema = Joi.object<CompleteTaskBody>({
+            taskId: Joi.number().required().min(1),
+            taskType: Joi.string()
+                .valid('dailyTasks', 'weeklyTasks', 'monthlyTasks')
+                .required(),
+            points: Joi.number().required().min(1)
+        }).options({ stripUnknown: true });
+    
+        return schema.validate(data);
     }
-
 
     /**
      * @param {IUserModel} params

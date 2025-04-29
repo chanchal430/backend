@@ -1,6 +1,18 @@
 import { Document, Schema } from 'mongoose';
 import * as connections from '../connection/connection';
 
+export interface CompletedTask {
+    taskId: number;
+    completed: boolean;
+    completedAt: Date | null;
+  }
+
+interface GameHistoryEntry {
+  gameId: number;
+  date: string; 
+  played: boolean;
+}
+
 /**
  * @export
  * @interface IUserModel
@@ -15,10 +27,10 @@ export interface IUserModel extends Document {
     tapPoints: number;
     gamePoints: number;
     totalPoints: number;
-    completedDailyTasks: [];
-    completedWeeklyTasks: [];
-    completedMonthlyTasks: [];
-    gameHistory: [];
+    completedDailyTasks: CompletedTask[];
+    completedWeeklyTasks: CompletedTask[];
+    completedMonthlyTasks: CompletedTask[];
+    gameHistory: GameHistoryEntry[];
     lastResetDate: number;
     lastDailyReset: number;
     lastWeeklyReset: number;
@@ -27,102 +39,76 @@ export interface IUserModel extends Document {
 }
 
 const UserSchema: Schema = new Schema({
-    
-    telegramUserId:
-    {
+    telegramUserId: {
         type: String,
         required: true,
         unique: true
     },
-    firstName:
-    {
+    firstName: {
         type: String,
         default: ""
     },
-    lastName:
-    {
+    lastName: {
         type: String,
         default: ""
     },
-    email:
-    {
+    email: {
         type: String,
-        // unique: true,
         default: ""
     },
-    // Task Points Management
-    taskPoints:
-    {
+    taskPoints: {
         type: Number,
         default: 0
     },
-    tapPoints:
-    {
+    tapPoints: {
         type: Number,
         default: 0
     },
-    gamePoints:
-    {
+    gamePoints: {
         type: Number,
         default: 0
     },
-    totalPoints:
-    {
+    totalPoints: {
         type: Number,
         default: 0
     },
-    // Task Completion Tracking with Completion Status
-    completedDailyTasks: [
-        {
-            taskId: { type: Number, required: true },
-            completed: { type: Boolean, default: false },
-            completedAt: { type: Date, default: null },
-        },
-    ],
-    completedWeeklyTasks: [
-        {
-            taskId: { type: Number, required: true },
-            completed: { type: Boolean, default: false },
-            completedAt: { type: Date, default: null },
-        },
-    ],
-    completedMonthlyTasks: [
-        {
-            taskId: { type: Number, required: true },
-            completed: { type: Boolean, default: false },
-            completedAt: { type: Date, default: null },
-        },
-    ],
-    // Tracks games played today
-    gameHistory: [
-        {
-            gameId: { type: Number, required: true },
-            date: { type: String, required: true }, // Stores as 'YYYY-MM-DD'
-            played: { type: Boolean, default: false }, //  True if played, false if not
-        },
-    ],
-
+    completedDailyTasks: [{
+        taskId: { type: Number, required: true },
+        completed: { type: Boolean, default: false },
+        completedAt: { type: Date, default: null },
+    }],
+    completedWeeklyTasks: [{
+        taskId: { type: Number, required: true },
+        completed: { type: Boolean, default: false },
+        completedAt: { type: Date, default: null },
+    }],
+    completedMonthlyTasks: [{
+        taskId: { type: Number, required: true },
+        completed: { type: Boolean, default: false },
+        completedAt: { type: Date, default: null },
+    }],
+    gameHistory: [{
+        gameId: { type: Number, required: true },
+        date: { type: String, required: true },
+        played: { type: Boolean, default: false },
+    }],
     lastResetDate: {
         type: Number,
-        default: Date.now()
+        default: Date.now
     },
-    lastDailyReset:
-    {
+    lastDailyReset: {
         type: Number,
-        default: Date.now()
+        default: Date.now
     },
-    lastWeeklyReset:
-    {
+    lastWeeklyReset: {
         type: Number,
-        default: Date.now()
+        default: Date.now
     },
-    lastMonthlyReset:
-    {
+    lastMonthlyReset: {
         type: Number,
-        default: Date.now()
+        default: Date.now
     },
-    lastTapTimestamp:
-    {
+    lastTapTimestamp: {
         type: Number,
         default: null
     },
@@ -131,6 +117,5 @@ const UserSchema: Schema = new Schema({
     versionKey: false,
     timestamps: true
 });
-
 
 export default connections.db.model<IUserModel>('users', UserSchema);

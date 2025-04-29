@@ -93,24 +93,33 @@ export interface ProcessedQuestion {
 }
 
 export interface ITaskService {
-    /**
-     * @param {IUserModel} userModel
-     * @returns {Promise<IUserModel>}
-     * @memberof AuthService
-     */
-    completeTask(body: { taskId: number }, user: IUserModel): Promise<IUserModel>;
+  completeTask(body: CompleteTaskBody, user: IUserModel): Promise<boolean>;
+  tasks(body: { frequency?: TaskType }, user: IUserModel): Promise<TaskResponse>;
+}
 
-    /**
-     * @param {IUserModel} userModel
-     * @returns {Promise<IUserModel>}
-     * @memberof AuthService
-     */
-    tasks(
-        body: { frequency?: 'daily' | 'weekly' | 'monthly' },
-        user: IUserModel
-      ): Promise<{
-        daily: TaskCompletion[];
-        weekly: TaskCompletion[];
-        monthly: TaskCompletion[];
-      }>;
+export type TaskType = 'daily' | 'weekly' | 'monthly';
+export interface Task {
+  id: number;
+  platform: string;
+  description: string;
+  coins: number;
+  link: string;
+  icon: string;
+}
+
+export interface CompleteTaskBody {
+  taskId: number;
+  taskType: string;
+  points: number;
+}
+
+export interface TaskResponse {
+  success: boolean;
+  dailyTasks?: DefinedTask[];
+  weeklyTasks?: DefinedTask[];
+  monthlyTasks?: DefinedTask[];
+}
+
+export interface DefinedTask extends Task {
+  completed: boolean;
 }
