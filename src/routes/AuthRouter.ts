@@ -5,6 +5,10 @@ import { getQuestions } from '../components/Auth/controllers/quiz.controller';
 import { invite } from '../components/Auth/controllers/invite.controller';
 import { tasks, completeTask } from '../components/Auth/controllers/task.controller';
 
+/**
+ * Dont use any types
+ * Protected routes with auth
+ */
 const router = Router();
 
 router.post('/saveTelegramId', saveTelegramId);

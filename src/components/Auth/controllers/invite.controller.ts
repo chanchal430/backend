@@ -18,24 +18,25 @@ interface InviteResult {
 }
 
 export async function invite(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
 ): Promise<void> {
-  try {
-    if (!req.body.recipient) {
-      sendResponse(res, 400, 'Recipient is required', null, true);
-      return;
-    }
+    try {
+        if (!req.body.recipient) {
+            sendResponse(res, 400, 'Recipient is required', null, true);
 
-    const result: InviteResult = await AuthService.invite(req.body, req.user);
-    
-    if (result.success) {
-      sendResponse(res, 200, 'Invite code generated successfully', { referralId: result.referralId });
-    } else {
-      sendResponse(res, 400, 'Failed to send invite', null, true);
+            return;
+        }
+
+        const result: InviteResult = await AuthService.invite(req.body, req.user);
+
+        if (result.success) {
+            sendResponse(res, 200, 'Invite code generated successfully', { referralId: result.referralId });
+        } else {
+            sendResponse(res, 400, 'Failed to send invite', null, true);
+        }
+    } catch (error) {
+        handleError(error, res, next);
     }
-  } catch (error) {
-    handleError(error, res, next);
-  }
 }

@@ -4,7 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
 import * as helmet from 'helmet';
-import * as path from "path";
+import * as path from 'path';
 import { HttpError } from '../error/index';
 import { sendHttpErrorModule } from '../error/sendHttpError';
 
@@ -25,7 +25,7 @@ export function configure(app: express.Application): void {
     // helps you secure your Express apps by setting various HTTP headers
     app.use(helmet());
     // providing a Connect/Express middleware that can be used to enable CORS with various options
-    
+
     app.use(cors());
 
     // custom errors
@@ -47,8 +47,8 @@ export function configure(app: express.Application): void {
 
     // Serve static images with HTTPS enforcement
     app.use(
-        "/assets/images",
-        express.static(path.join(__dirname, "assets/images"),)
+        '/assets/images',
+        express.static(path.join(__dirname, 'assets/images')),
     );
 }
 

@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
 import { Types } from 'mongoose';
 
-
 interface CustomJoi extends Joi.Root {
     objectId(): Joi.StringSchema;
   }

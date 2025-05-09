@@ -15,13 +15,13 @@ interface IConfig {
 const NODE_ENV: string = process.env.NODE_ENV || 'development';
 
 const development: IConfig = {
-    port: process.env.PORT ||9000,
+    port: process.env.PORT || 9000,
     database: {
         MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://ershivam2505:vSjV8AFV8TD4DAXT@cluster0.lonotmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
         MONGODB_DB_MAIN: process.env.MONGODB_DB_MAIN || '',
     },
-    webAppUrl:process.env.WEB_APP_URL||'',
-    botToken:process.env.BOT_TOKEN||'7908346366:AAEyJqlvlPtQytvJcE6iDi3dei9X7EG8g0w'
+    webAppUrl: process.env.WEB_APP_URL || '',
+    botToken: process.env.BOT_TOKEN || '7908346366:AAEyJqlvlPtQytvJcE6iDi3dei9X7EG8g0w',
 
 };
 
@@ -31,8 +31,8 @@ const production: IConfig = {
         MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://ershivam2505:vSjV8AFV8TD4DAXT@cluster0.lonotmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
         MONGODB_DB_MAIN: process.env.MONGODB_DB_MAIN || '',
     },
-    webAppUrl:process.env.WEB_APP_URL||'',
-    botToken:process.env.BOT_TOKEN||'7908346366:AAEyJqlvlPtQytvJcE6iDi3dei9X7EG8g0w'
+    webAppUrl: process.env.WEB_APP_URL || '',
+    botToken: process.env.BOT_TOKEN || '7908346366:AAEyJqlvlPtQytvJcE6iDi3dei9X7EG8g0w',
 };
 
 const test: IConfig = {
@@ -41,8 +41,8 @@ const test: IConfig = {
         MONGODB_URI: process.env.MONGODB_URI || '',
         MONGODB_DB_MAIN: 'test_folk_db',
     },
-    webAppUrl:process.env.WEB_APP_URL||'',
-    botToken:process.env.BOT_TOKEN||''
+    webAppUrl: process.env.WEB_APP_URL || '',
+    botToken: process.env.BOT_TOKEN || '',
 };
 
 const config: {

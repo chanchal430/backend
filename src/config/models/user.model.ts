@@ -9,16 +9,11 @@ export interface CompletedTask {
 
 interface GameHistoryEntry {
   gameId: number;
-  date: string; 
+  date: string;
   played: boolean;
 }
 
-/**
- * @export
- * @interface IUserModel
- * @extends {Document}
- */
-export interface IUserModel extends Document {
+export interface IUser {
     telegramUserId: string;
     firstName: string;
     lastName: string;
@@ -36,41 +31,68 @@ export interface IUserModel extends Document {
     lastWeeklyReset: number;
     lastMonthlyReset: number;
     lastTapTimestamp: number;
-}
+  }
+
+/**
+ * @export
+ * @interface IUserModel
+ * @extends {Document}
+ */
+
+export interface IUserModel extends IUser, Document {}
+// export interface IUserModel extends Document {
+//     telegramUserId: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     taskPoints: number;
+//     tapPoints: number;
+//     gamePoints: number;
+//     totalPoints: number;
+//     completedDailyTasks: CompletedTask[];
+//     completedWeeklyTasks: CompletedTask[];
+//     completedMonthlyTasks: CompletedTask[];
+//     gameHistory: GameHistoryEntry[];
+//     lastResetDate: number;
+//     lastDailyReset: number;
+//     lastWeeklyReset: number;
+//     lastMonthlyReset: number;
+//     lastTapTimestamp: number;
+// }
 
 const UserSchema: Schema = new Schema({
     telegramUserId: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     firstName: {
         type: String,
-        default: ""
+        default: '',
     },
     lastName: {
         type: String,
-        default: ""
+        default: '',
     },
     email: {
         type: String,
-        default: ""
+        default: '',
     },
     taskPoints: {
         type: Number,
-        default: 0
+        default: 0,
     },
     tapPoints: {
         type: Number,
-        default: 0
+        default: 0,
     },
     gamePoints: {
         type: Number,
-        default: 0
+        default: 0,
     },
     totalPoints: {
         type: Number,
-        default: 0
+        default: 0,
     },
     completedDailyTasks: [{
         taskId: { type: Number, required: true },
@@ -94,28 +116,28 @@ const UserSchema: Schema = new Schema({
     }],
     lastResetDate: {
         type: Number,
-        default: Date.now
+        default: Date.now,
     },
     lastDailyReset: {
         type: Number,
-        default: Date.now
+        default: Date.now,
     },
     lastWeeklyReset: {
         type: Number,
-        default: Date.now
+        default: Date.now,
     },
     lastMonthlyReset: {
         type: Number,
-        default: Date.now
+        default: Date.now,
     },
     lastTapTimestamp: {
         type: Number,
-        default: null
+        default: null,
     },
 }, {
     collection: 'users',
     versionKey: false,
-    timestamps: true
+    timestamps: true,
 });
 
 export default connections.db.model<IUserModel>('users', UserSchema);

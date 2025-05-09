@@ -18,7 +18,8 @@
     "start-server": "npx pm2 start ./build/config/server/index.js --name folk-backend --env development",
     "stop-server": "npx pm2 stop folk-backend && npx pm2 delete folk-backend",
     "ts:watch": "tsc -w",
-    "test": "NODE_ENV=test mocha -r ts-node/register test/index.js --exit"
+    "test": "NODE_ENV=test mocha -r ts-node/register test/index.js --exit",
+    "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "files": [
     "src"

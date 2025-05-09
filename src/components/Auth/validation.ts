@@ -22,16 +22,14 @@ class AuthValidation extends Validation {
      * @returns {Joi.ValidationResult}
      * @memberof UserValidation
      */
-    saveTelegramId(
-        params: IUserModel,
-    ): Joi.ValidationResult {
+    saveTelegramId(params: { telegramUserId: string }): Joi.ValidationResult {
         const schema: Joi.Schema = Joi.object().keys({
-            telegramUserId: Joi.string().trim().pattern(/^[0-9]+$/).min(1).required(),
+            telegramUserId: Joi.string().trim().pattern(/^[0-9]+$/).min(1)
+                .required(),
         });
 
         return schema.validate(params);
     }
-
 
     /**
      * @param {IUserModel} params
@@ -39,18 +37,17 @@ class AuthValidation extends Validation {
      * @memberof UserValidation
      */
     saveGamePoints(
-        params: IUserModel,
+        params: { gameId: number; gameCoins: number },
     ): Joi.ValidationResult {
         const schema: Joi.Schema = Joi.object().keys({
-            gameId:Joi.number().min(1).required(),
-            gameCoins:Joi.number().min(0).required()
+            gameId: Joi.number().min(1).required(),
+            gameCoins: Joi.number().min(0).required(),
         });
 
         return schema.validate(params);
     }
 
-
-    /**updateUser
+    /** updateUser
      * @param {IUserModel} params
      * @returns {Joi.ValidationResult}
      * @memberof UserValidation
@@ -59,12 +56,11 @@ class AuthValidation extends Validation {
         params: IUserModel,
     ): Joi.ValidationResult {
         const schema: Joi.Schema = Joi.object().keys({
-            
+
         });
 
         return schema.validate(params);
     }
-
 
     /**
      * @param {IUserModel} params
@@ -72,16 +68,16 @@ class AuthValidation extends Validation {
      * @memberof UserValidation
      */
     completeTask(
-        data: unknown
+        data: unknown,
     ): Joi.ValidationResult<CompleteTaskBody> {
         const schema = Joi.object<CompleteTaskBody>({
             taskId: Joi.number().required().min(1),
             taskType: Joi.string()
                 .valid('dailyTasks', 'weeklyTasks', 'monthlyTasks')
                 .required(),
-            points: Joi.number().required().min(1)
+            points: Joi.number().required().min(1),
         }).options({ stripUnknown: true });
-    
+
         return schema.validate(data);
     }
 
@@ -91,47 +87,47 @@ class AuthValidation extends Validation {
      * @memberof UserValidation
      */
     updateTapPoints(
-        params: IUserModel,
+        params: { points: number },
     ): Joi.ValidationResult {
         const schema: Joi.Schema = Joi.object().keys({
-            points:Joi.number().min(0).max(500).required(),
+            points: Joi.number().min(0).max(500).required(),
         });
 
         return schema.validate(params);
     }
-
 
     /**
      * @param {IUserModel} params
      * @returns {Joi.ValidationResult}
      * @memberof UserValidation
      */
-    updateUser(
-        params: IUserModel,
-    ): Joi.ValidationResult {
+    updateUser(params: { firstName?: string; lastName?: string; email?: string }): Joi.ValidationResult {
         const schema: Joi.Schema = Joi.object().keys({
-            firstName: Joi.string().lowercase().trim().regex(/^[a-z]+$/).min(2).max(20).allow(''),
-            lastName: Joi.string().lowercase().trim().regex(/^[a-z]+$/).min(2).max(20).allow(''),
-            email: Joi.string().trim().email({
-                minDomainSegments: 2,
-            }).min(0).allow(''),
+            firstName: Joi.string().lowercase().trim().regex(/^[a-z]+$/)
+                .min(2)
+                .max(20)
+                .allow(''),
+            lastName: Joi.string().lowercase().trim().regex(/^[a-z]+$/)
+                .min(2)
+                .max(20)
+                .allow(''),
+            email: Joi.string().trim().email({ minDomainSegments: 2 }).min(0)
+                .allow(''),
         });
 
         return schema.validate(params);
     }
-
 
     /**
      * @param {IUserModel} params
      * @returns {Joi.ValidationResult}
      * @memberof UserValidation
      */
-     getQuestions = {
+    getQuestions = {
         params: Joi.object({
-          category: Joi.string().valid('general', 'crypto', 'technology').required()
-        })
-      };
-
+            category: Joi.string().valid('general', 'crypto', 'technology').required(),
+        }),
+    };
 
     /**
      * @param {IUserModel} params
@@ -147,7 +143,6 @@ class AuthValidation extends Validation {
         return schema.validate(params);
     }
 
-
     /**
      * @param {IUserModel} params
      * @returns {Joi.ValidationResult}
@@ -161,8 +156,6 @@ class AuthValidation extends Validation {
 
         return schema.validate(params);
     }
-
-
 }
 
 export default new AuthValidation();

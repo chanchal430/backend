@@ -1,16 +1,15 @@
-import UserModel from "../../../config/models/user.model";
-import { IGameService } from "../interface";
-import AuthValidation from '../validation';
 import * as path from 'path';
-import * as fs from 'fs';
-import { getToday, readJSON } from "../../../utils";
-
-
+import { IGameService } from '../interface';
+import AuthValidation from '../validation';
+import { getToday, readJSON } from '../../../utils';
 
 const GameService: IGameService = {
 
-    async saveGamePoints(body, user) {
-        const { error, value } = AuthValidation.saveGamePoints(body);
+    async saveGamePoints(body: { gameId: number, gamePoints: number }, user) {
+        const { error, value } = AuthValidation.saveGamePoints({
+            gameId: body.gameId,
+            gameCoins: body.gamePoints,
+        });
         if (error) throw new Error(error.message);
 
         const { gameId, gameCoins } = value;
@@ -30,11 +29,14 @@ const GameService: IGameService = {
         user.gamePoints += gameCoins;
         user.totalPoints = user.taskPoints + user.tapPoints + user.gamePoints;
         await user.save();
+
         return 1;
     },
 
     async updateTapPoints(body, user) {
-        const { error, value } = AuthValidation.updateTapPoints(body);
+        const { error, value } = AuthValidation.updateTapPoints({
+            points: body.tapPoints,
+        });
         if (error) throw new Error(error.message);
 
         const MAX_TAP_POINTS = 20;
@@ -56,9 +58,10 @@ const GameService: IGameService = {
         user.totalPoints = user.taskPoints + user.tapPoints + user.gamePoints;
         user.lastTapTimestamp = now;
         await user.save();
+
         return 1;
     },
 
-}
+};
 
 export default GameService;

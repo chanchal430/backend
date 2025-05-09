@@ -10,29 +10,28 @@ import { AuthComponent } from '../components';
 export function init(app: express.Application): void {
     const router: express.Router = express.Router();
 
-
     /**
      * @description Forwards any requests to the /auth URI to our AuthRouter
      * @constructs
      */
-
 
     app.get('/health', (req, res) => {
         try {
             res.status(200).json({
                 code: 200,
                 error: false,
-                message: "health check is active"
-            })
-        }
-        catch (error) {
+                message: 'health check is active',
+            });
+        } catch (error) {
             res.status(400).json({
                 code: 400,
                 error: false,
-                message: "health check has failed"
-            })
+                message: 'health check has failed',
+            });
         }
-    })
+    });
+
+    app.use(express.json());
 
     app.use('/api', AuthRouter);
 

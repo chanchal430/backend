@@ -1,42 +1,52 @@
-import { IUserModel } from "../../config/models/user.model";
-
-
+import { CompletedTask, IUserModel } from '../../config/models/user.model';
 
 interface TaskCompletion {
     taskId: number;
     completed: boolean;
     completedAt: Date | null;
   }
-  
+
   interface GameHistoryEntry {
     gameId: number;
     date: string;
     played: boolean;
   }
 
+// export interface IUserService {
+
+//     /**
+//      * @param {IUserModel} userModel
+//      * @returns {Promise<IUserModel>}
+//      * @memberof AuthService
+//      */
+//     saveTelegramId(body: { telegramId: string }): Promise<IUserModel>;
+
+//     /**
+//      * @param {IUserModel} userModel
+//      * @returns {Promise<IUserModel>}
+//      * @memberof AuthService
+//      */
+//     updateUser(body: Partial<IUserModel>, user: IUserModel): Promise<IUserModel>;
+
+//     /**
+//      * @param {IUserModel} userModel
+//      * @returns {Promise<IUserModel>}
+//      * @memberof AuthService
+//      */
+//     user(body: Record<string, unknown>, user: IUserModel): Promise<IUserModel>;
+
+// }
+
 export interface IUserService {
-    
-    /**
-     * @param {IUserModel} userModel
-     * @returns {Promise<IUserModel>}
-     * @memberof AuthService
-     */
-    saveTelegramId(body: { telegramId: string }): Promise<IUserModel>;
-
-    /**
-     * @param {IUserModel} userModel
-     * @returns {Promise<IUserModel>}
-     * @memberof AuthService
-     */
-    updateUser(body: Partial<IUserModel>, user: IUserModel): Promise<IUserModel>;
-
-    /**
-     * @param {IUserModel} userModel
-     * @returns {Promise<IUserModel>}
-     * @memberof AuthService
-     */
-    user(body: Record<string, unknown>, user: IUserModel): Promise<IUserModel>;
-
+  saveTelegramId(body: { telegramUserId: string }): Promise<number>;
+  updateUser(
+    body: Partial<Pick<IUserModel, 'firstName' | 'lastName' | 'email'>>,
+    user: Pick<IUserModel, 'telegramUserId'>
+  ): Promise<number>;
+  user(
+    _: unknown,
+    usr: Pick<IUserModel, 'telegramUserId'>
+  ): Promise<{ success: boolean; user: Partial<IUserModel> | null }>;
 }
 
 export interface IGameService {
@@ -45,15 +55,14 @@ export interface IGameService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    saveGamePoints(body: { gamePoints: number }, user: IUserModel): Promise<IUserModel>;
-
+    saveGamePoints(body: { gamePoints: number }, user: IUserModel): Promise<1 | 0>;
 
     /**
      * @param {IUserModel} userModel
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    updateTapPoints(body: { tapPoints: number }, user: IUserModel): Promise<IUserModel>;
+    updateTapPoints(body: { tapPoints: number }, user: IUserModel): Promise<1 | 0>;
 
 }
 
@@ -63,7 +72,7 @@ export interface IInviteService {
      * @returns {Promise<IUserModel>}
      * @memberof AuthService
      */
-    invite(body: { recipient: string }, user: IUserModel):  Promise<{ success: boolean; referralId?: string }>;
+    invite(body: { recipient: string }, user: IUserModel): Promise<{ success: boolean; referralId?: string }>;
 }
 
 export interface IQuizService {
@@ -79,9 +88,8 @@ export interface IQuizService {
     ): Promise<{
       success: boolean;
       questions?: ProcessedQuestion[];
-    }>;  
+    }>;
 }
-
 
 export interface ProcessedQuestion {
   id: string;

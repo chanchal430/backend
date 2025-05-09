@@ -33,7 +33,7 @@ app.set('port', process.env.PORT || 9000);
 app.set('secret', process.env.SECRET || 'superSecret');
 
 /**
- * starts telegram bot helper 
+ * starts telegram bot helper
  */
 // botHelper.start();
 /**

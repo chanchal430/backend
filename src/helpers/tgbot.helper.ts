@@ -1,7 +1,6 @@
 // import { Telegraf } from "telegraf";
 // import config from "../env/index";
 
-
 // class botHelper {
 //     public async start(): Promise<any> {
 //         try {
@@ -41,6 +40,4 @@
 //     }
 // }
 
-
 // export default new botHelper();
-
