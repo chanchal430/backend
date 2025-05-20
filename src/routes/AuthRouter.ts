@@ -4,6 +4,7 @@ import { updateTapPoints, saveGamePoints } from '../components/Auth/controllers/
 import { getQuestions } from '../components/Auth/controllers/quiz.controller';
 import { invite } from '../components/Auth/controllers/invite.controller';
 import { tasks, completeTask } from '../components/Auth/controllers/task.controller';
+import { isAuthenticated } from '../config/middleware/jwtAuth';
 
 /**
  * Dont use any types
@@ -12,13 +13,15 @@ import { tasks, completeTask } from '../components/Auth/controllers/task.control
 const router = Router();
 
 router.post('/saveTelegramId', saveTelegramId);
-router.post('/updateUser', updateUser);
-router.post('/getUser', getUser);
-router.post('/updateTapPoints', updateTapPoints);
-router.post('/saveGamePoints', saveGamePoints);
-router.post('/getQuestions', getQuestions);
-router.post('/invite', invite);
-router.post('/tasks', tasks);
-router.post('/completeTask', completeTask);
+
+// Protected routes
+router.post('/updateUser', isAuthenticated, updateUser);
+router.post('/getUser', isAuthenticated, getUser);
+router.post('/updateTapPoints', isAuthenticated, updateTapPoints);
+router.post('/saveGamePoints', isAuthenticated, saveGamePoints);
+router.post('/getQuestions', isAuthenticated, getQuestions);
+router.post('/invite', isAuthenticated, invite);
+router.post('/tasks', isAuthenticated, tasks);
+router.post('/completeTask', isAuthenticated, completeTask);
 
 export default router;

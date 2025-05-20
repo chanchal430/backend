@@ -1,46 +1,71 @@
 import { NextFunction, Request, Response } from 'express';
-import userModel from '../models/user.model';
+import * as jwt from 'jsonwebtoken';
+import userModel, { IUserModel } from '../models/user.model';
+import config from '../env';
 
 interface RequestWithUser extends Request {
-    user: object | string;
+    user: IUserModel
     telegramUserId: string;
 }
 
 export async function isAuthenticated(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
-    const token: string | string[] = req.headers['telegram-id'];
-    if (token) {
-        try {
-            const user = await userModel.findOne({ telegramUserId: token });
-            if (!user) {
-                res.status(401).json({
-                    status: 401,
-                    error: true,
-                    message: 'Unauthorized',
-                });
-            }
-            if (!user.telegramUserId) {
-                res.status(401).json({
-                    status: 401,
-                    error: true,
-                    message: 'Unauthorized',
-                });
-            }
-            // Attach Telegram user ID to request
-            req.telegramUserId = user.telegramUserId;
-            req.user = user;
+    const authHeader = req.headers.authorization;
 
-            return next();
-        } catch (error) {
-            res.status(401).json({
-                status: 401,
-                error: true,
-                message: 'Unauthorized',
-            });
-        }
+    console.log('authHeader', authHeader)
+    
+    if (!authHeader?.startsWith('Bearer ')) {
+        return sendUnauthorized(res, 'Invalid authorization header format');
     }
-    res.status(400).json({
-        status: 400,
+
+    const token = authHeader.split(' ')[1];
+
+    console.log('token--', token)
+    
+    try {
+        // Verify JWT
+        const decoded = jwt.verify(token, config.jwtSecret) as { user: { telegramUserId: string } };
+
+        console.log('Decoded JWT:', decoded);
+        
+        // Find user in database
+        const user = await userModel.findOne({ 
+            telegramUserId: decoded.user.telegramUserId 
+        });
+
+        if (!user) {
+            return sendUnauthorized(res, 'User not found');
+        }
+
+        // Attach user to request
+        req.telegramUserId = user.telegramUserId;
+        req.user = user;
+        next();
+    } catch (error) {
+        handleAuthError(error, res);
+    }
+}
+
+// Helper functions
+function sendUnauthorized(res: Response, message: string): void {
+    res.status(401).json({
+        status: 401,
         error: true,
-        message: 'No Token provided',
+        message
+    });
+}
+
+function handleAuthError(error: any, res: Response): void {
+    let message = 'Unauthorized';
+    
+    if (error instanceof jwt.TokenExpiredError) {
+        message = 'Token expired';
+    } else if (error instanceof jwt.JsonWebTokenError) {
+        message = 'Invalid token';
+    }
+
+    res.status(401).json({
+        status: 401,
+        error: true,
+        message
     });
 }

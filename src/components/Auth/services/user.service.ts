@@ -3,18 +3,18 @@ import { IUserService } from '../interface';
 import AuthValidation from '../validation';
 
 interface TelegramRequest {
-  telegramUserId: string;
+    telegramUserId: string;
 }
 
 interface UpdateUserRequest {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
 }
 
 const UserService: IUserService = {
 
-    async saveTelegramId(body: TelegramRequest): Promise<number> {
+    async saveTelegramId(body: TelegramRequest): Promise<IUserModel> {
         const { error, value } = AuthValidation.saveTelegramId(body);
         if (error) throw new Error(error.message);
 
@@ -32,10 +32,13 @@ const UserService: IUserService = {
             await user.save();
         }
 
-        return 1;
+        return user;
     },
 
-    async updateUser(body: UpdateUserRequest, user: Pick<IUserModel, 'telegramUserId'>): Promise<number> {
+    async updateUser(
+        body: UpdateUserRequest,
+        user: Pick<IUserModel, 'telegramUserId'>
+    ): Promise<IUserModel | null> {
         const { error, value } = AuthValidation.updateUser(body);
         if (error) throw new Error(error.message);
 
@@ -45,17 +48,20 @@ const UserService: IUserService = {
 
         if (value.email) {
             const existing = await UserModel.findOne({ email: value.email });
-            if (existing && existing.telegramUserId !== user.telegramUserId) return 2;
+            if (existing && existing.telegramUserId !== user.telegramUserId) {
+                // You can throw a specific error or return null
+                throw new Error('Email already in use by another account');
+            }
             update.email = value.email;
         }
 
-        const updated = await UserModel.findOneAndUpdate(
+        const updatedUser = await UserModel.findOneAndUpdate(
             { telegramUserId: user.telegramUserId },
             update,
-            { new: true },
+            { new: true }
         );
 
-        return updated ? 1 : 0;
+        return updatedUser;
     },
 
     async user(_: unknown, usr: Pick<IUserModel, 'telegramUserId'>): Promise<{ success: boolean; user: Partial<IUserModel> | null }> {

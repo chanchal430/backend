@@ -12,37 +12,13 @@ interface TaskCompletion {
     played: boolean;
   }
 
-// export interface IUserService {
-
-//     /**
-//      * @param {IUserModel} userModel
-//      * @returns {Promise<IUserModel>}
-//      * @memberof AuthService
-//      */
-//     saveTelegramId(body: { telegramId: string }): Promise<IUserModel>;
-
-//     /**
-//      * @param {IUserModel} userModel
-//      * @returns {Promise<IUserModel>}
-//      * @memberof AuthService
-//      */
-//     updateUser(body: Partial<IUserModel>, user: IUserModel): Promise<IUserModel>;
-
-//     /**
-//      * @param {IUserModel} userModel
-//      * @returns {Promise<IUserModel>}
-//      * @memberof AuthService
-//      */
-//     user(body: Record<string, unknown>, user: IUserModel): Promise<IUserModel>;
-
-// }
 
 export interface IUserService {
-  saveTelegramId(body: { telegramUserId: string }): Promise<number>;
+  saveTelegramId(body: { telegramUserId: string }): Promise<IUserModel>;
   updateUser(
     body: Partial<Pick<IUserModel, 'firstName' | 'lastName' | 'email'>>,
     user: Pick<IUserModel, 'telegramUserId'>
-  ): Promise<number>;
+  ): Promise<IUserModel>;
   user(
     _: unknown,
     usr: Pick<IUserModel, 'telegramUserId'>
