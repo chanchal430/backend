@@ -2,6 +2,7 @@ import * as path from 'path';
 import { IGameService } from '../interface';
 import AuthValidation from '../validation';
 import { getToday, readJSON } from '../../../utils';
+import questions from '../../../../assets/data/questions.json'
 
 const GameService: IGameService = {
 
@@ -13,7 +14,7 @@ const GameService: IGameService = {
         if (error) throw new Error(error.message);
 
         const { gameId, gameCoins } = value;
-        const games = readJSON(path.join(__dirname, '../../../../assets/data/questions.json'));
+        const games = questions;
         if (!games.find((g: any) => g.id === gameId)) return 0;
 
         const today = getToday();

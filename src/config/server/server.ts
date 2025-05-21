@@ -1,12 +1,17 @@
 import * as express from 'express';
 import * as Middleware from '../middleware/middleware';
 import * as Routes from '../../routes';
+import * as cors from 'cors';
 // import botHelper from "../helpers/tgbot.helper";
 /**
  * @constant {express.Application}
  */
 const app: express.Application = express();
 
+/**
+ * Enable CORS for all routes
+ */
+app.use(cors()); 
 /**
  * @constructs express.Application Middleware
  */
