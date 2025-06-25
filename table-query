@@ -1,0 +1,51 @@
+-- User table
+CREATE TABLE IF NOT EXISTS users (
+  id BIGSERIAL PRIMARY KEY,
+  telegram_id BIGINT UNIQUE NOT NULL,
+  username TEXT,
+  first_name TEXT,
+  last_name TEXT,
+  avatar_url TEXT,
+  points INTEGER DEFAULT 0,
+  referral_code TEXT UNIQUE,
+  referred_by_id BIGINT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Tap table
+CREATE TABLE IF NOT EXISTS taps (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id),
+  count INTEGER NOT NULL,
+  earned INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Checkin table
+CREATE TABLE IF NOT EXISTS checkins (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id),
+  day INTEGER NOT NULL,
+  reward INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- SocialTask table
+CREATE TABLE IF NOT EXISTS social_tasks (
+  id BIGSERIAL PRIMARY KEY,
+  platform TEXT NOT NULL,
+  type TEXT NOT NULL,
+  url TEXT NOT NULL,
+  reward INTEGER NOT NULL,
+  expires_at TIMESTAMP
+);
+
+-- SocialTaskCompletion table
+CREATE TABLE IF NOT EXISTS social_task_completions (
+  id BIGSERIAL PRIMARY KEY,
+  task_id BIGINT NOT NULL REFERENCES social_tasks(id),
+  user_id BIGINT NOT NULL REFERENCES users(id),
+  proof JSONB NOT NULL,
+  completed_at TIMESTAMP DEFAULT NOW()
+);
