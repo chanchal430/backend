@@ -1,16 +1,18 @@
 -- User table
 CREATE TABLE IF NOT EXISTS users (
-  id BIGSERIAL PRIMARY KEY,
-  telegram_id BIGINT UNIQUE NOT NULL,
-  username TEXT,
-  first_name TEXT,
-  last_name TEXT,
-  avatar_url TEXT,
-  points INTEGER DEFAULT 0,
-  referral_code TEXT UNIQUE,
-  referred_by_id BIGINT,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+    id               BIGSERIAL PRIMARY KEY,
+    telegram_id      BIGINT UNIQUE,
+    username         TEXT,
+    first_name       TEXT,
+    last_name        TEXT,
+    avatar_url       TEXT,
+    points           INTEGER DEFAULT 0,
+    referral_code    TEXT UNIQUE,
+    referred_by_id   BIGINT,
+    created_at       TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
+    updated_at       TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
+    role             TEXT DEFAULT 'user',
+    privy_uid        TEXT UNIQUE
 );
 
 -- Tap table
@@ -33,12 +35,15 @@ CREATE TABLE IF NOT EXISTS checkins (
 
 -- SocialTask table
 CREATE TABLE IF NOT EXISTS social_tasks (
-  id BIGSERIAL PRIMARY KEY,
-  platform TEXT NOT NULL,
-  type TEXT NOT NULL,
-  url TEXT NOT NULL,
-  reward INTEGER NOT NULL,
-  expires_at TIMESTAMP
+    id          BIGSERIAL PRIMARY KEY,
+    platform    TEXT NOT NULL,
+    type        TEXT NOT NULL,
+    url         TEXT NOT NULL,
+    reward      INTEGER NOT NULL,
+    expires_at  TIMESTAMP WITHOUT TIME ZONE,
+    description TEXT,
+    is_active   BOOLEAN
+
 );
 
 -- SocialTaskCompletion table
