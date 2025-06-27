@@ -1,50 +1,125 @@
-# Folk Finance Backend
 
-Backend service for the **Folk Finance Telegram Mini App**, handling user management, game mechanics, tasks, referrals, and quizzes.
+```markdown
+Telegram Mini App Backend
+
+A scalable backend for a Telegram Mini App, built with **Node.js**, **Express**, **TypeScript**, and **PostgreSQL**.  
+Handles user authentication, referrals, social tasks, check-ins, and in-app tap-game logic.
+
+
+
+1.Clone the Repository
+
+
+git clone https://github.com/Folks-Finance/tg-mini-app-backend-internal
+git checkout feat/new
+
+
+2. Install Dependencies
+
+
+npm install
+
+3. Configure the Database
+
+* Install and run PostgreSQL on your machine.
+
+* Create a new database:
+
+  createdb telegram_mini
+
+
+* Run the table creation scripts found in `table-query/` or paste your provided `CREATE TABLE` SQL statements in the psql shell:
+
+ 
+  psql -d telegram_mini
+  Then run your table creation SQL
+  
 
 ---
 
-## 📁 Project Structure
+### 4. **Set Up Environment Variables**
 
-- `src/` – TypeScript source files
-- `build/` – Compiled JavaScript output
-- `routes/` – API endpoints
-- `config/` – Server, database, and environment config
-- `components/` – Business logic (controllers, services, validation)
-- `utils/` – Utility helpers
+Create a `.env` file at the project root:
+
+
+DATABASE_URL="postgresql://postgres:<password>@localhost:5432/telegram_mini"
+PORT=8000
+PRIVY_APP_ID=""
+PRIVY_APP_SECRET=""
+
+
+> Replace `<password>` with your local postgres password.
+> Fill in Privy credentials use https://privy.io/
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone the Repo
+### 5. **Start the Development Server**
 
 ```bash
-git clone https://github.com/your-org/folk-finance-backend.git
-cd folk-finance-backend
+npm run dev
+```
 
+* This will start the server with `nodemon` for automatic reloads on file changes.
+
+**To run in production:**
+
+```bash
+npm run build
+npm start
 ```
 
 ---
 
-### 2. Install Dependencies
-```bash
-npm Install
+## 🧪 API Usage
 
-```
+API endpoints are grouped by feature module.
+Some examples:
 
-### 3. Configure Environment Variables
+* `GET /api/user/me` — Fetch the authenticated user’s profile.
+* `POST /api/user` — Register or update a user.
+* `GET /api/tasks` — List available social tasks.
+* `POST /api/checkin` — Mark daily/weekly check-in.
+* More endpoints are available; see `src/modules/` for details.
 
-Create a .env file in src/config/env/ or project root.
+You can use [Postman](https://www.postman.com/) or [curl](https://curl.se/) to test your endpoints.
 
-```bash
-PORT=9000
-MONGO_URI=mongodb://localhost:27017/folk-finance
-JWT_SECRET=yourSecretKey
-```
 ---
-## Start with PM2 (Recommended)
 
-```bash
-npm run start-server
-```
+## 🛠️ Troubleshooting
+
+* **Database connection errors:**
+  Ensure your `.env` is set up and PostgreSQL is running.
+* **Missing tables:**
+  Run all required `CREATE TABLE` statements in your database.
+* **Environment issues:**
+  Double-check `.env` and installed dependencies.
+
+---
+
+## 📖 Additional Notes
+
+* **Code is modular**: Add features by creating new modules in `src/modules/`.
+* **Supports Privy authentication**.
+* **Refer to `src/config/db.ts`** for database connection logic.
+* **Extend with new tables** using migrations or manual SQL as your app grows.
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and suggestions are welcome!
+Please open an issue or submit a pull request.
+
+---
+
+## 📝 License
+
+MIT License
+
+---
+
+## 👤 Maintainer
+
+* Your Name ([@shivam-V8](https://t.me/heyshiri) or [GitHub](https://github.com/shivam-V8))
+
+
