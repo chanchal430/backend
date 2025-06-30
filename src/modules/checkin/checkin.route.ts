@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkin } from './checkin.controller';
-import { requirePrivyAuth } from '../../middlewares/requirePrivyAuth';
+import { requireTelegramAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
-router.post('/', requirePrivyAuth, checkin);
+router.post('/', requireTelegramAuth, checkin);
 export default router;

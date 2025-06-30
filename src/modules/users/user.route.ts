@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { getMe, savePrivyUser } from './user.controller';
-import { requirePrivyAuth } from '../../middlewares/requirePrivyAuth';
+import { getMe, saveTelegramUser } from './user.controller';
+import { requireTelegramAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
-router.post('/', requirePrivyAuth, savePrivyUser);
-router.get('/me', requirePrivyAuth, getMe);
+
+router.post('/', requireTelegramAuth, saveTelegramUser);
+router.get('/me', requireTelegramAuth, getMe);
+
 export default router;
