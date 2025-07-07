@@ -33,14 +33,15 @@ export async function getTasks(req: Request, res: Response) {
   }
 }
 
-export async function completeTask(req: any, res: any) {
+export async function completeTask(req: Request, res: Response) {
   try {
     const userId = req.user?.id;
     const taskId = parseInt(req.params.id);
     const { proof } = req.body;
 
     if (!userId || isNaN(taskId)) {
-      return res.status(400).json({ error: 'Invalid request parameters' });
+      res.status(400).json({ error: 'Invalid request parameters' });
+      return;
     }
 
     // Verify task exists and is active
@@ -52,7 +53,8 @@ export async function completeTask(req: any, res: any) {
     );
     
     if (taskResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Task not found, expired, or inactive' });
+      res.status(404).json({ error: 'Task not found, expired, or inactive' });
+      return;
     }
     
     const task = taskResult.rows[0];
@@ -65,7 +67,8 @@ export async function completeTask(req: any, res: any) {
     );
     
     if (existingResult.rows.length > 0) {
-      return res.status(400).json({ error: 'Task already completed' });
+      res.status(400).json({ error: 'Task already completed' });
+      return;
     }
     
     // Record completion
@@ -99,7 +102,7 @@ export async function completeTask(req: any, res: any) {
   }
 }
 
-export const createTask = async (req: any, res: any) => {
+export const createTask = async (req: Request, res: Response) => {
   try {
     const { platform, type, url, reward, expiresAt, description } = req.body;
     const errors = [];
@@ -120,7 +123,8 @@ export const createTask = async (req: any, res: any) => {
     }
 
     if (errors.length > 0) {
-      return res.status(400).json({ error: 'Validation failed', details: errors });
+      res.status(400).json({ error: 'Validation failed', details: errors });
+      return;
     }
 
     const { rows } = await db.query(
@@ -145,56 +149,3 @@ export const createTask = async (req: any, res: any) => {
   }
 };
 
-
-//   let query = 'SELECT * FROM social_tasks';
-//   const queryParams = [];
-
-//   // If a type is provided, add a WHERE clause to the query
-//   if (type && ['daily', 'weekly', 'monthly', 'promos'].includes(type as string)) {
-//     query += ' WHERE type = $1';
-//     queryParams.push(type);
-//   }
-
-//   // Add an ORDER BY clause to show newest tasks first, for example
-//   query += ' ORDER BY created_at DESC';
-
-//   const { rows } = await db.query(query, queryParams);
-//   res.json(rows);
-// }
-
-// export async function completeTask(req: any, res: any) {
-//   const userId = req.user?.userId;
-//   const taskId = req.params.id;
-//   const { proof } = req.body;
-
-//   // Insert into social_task_completions
-//   await db.query(
-//     'INSERT INTO social_task_completions (task_id, user_id, proof) VALUES ($1, $2, $3)',
-//     [taskId, userId, proof]
-//   );
-
-//   // Reward user (fetch task.reward)
-//   const { rows } = await db.query('SELECT reward FROM social_tasks WHERE id = $1', [taskId]);
-//   const reward = rows[0]?.reward || 0;
-//   await db.query('UPDATE users SET points = points + $1 WHERE id = $2', [reward, userId]);
-//   res.json({ reward });
-// }
-
-// export const createTask = async (req: any, res: any) => {
-//   // Add 'description' to the destructured body
-//   const { platform, type, url, reward, expiresAt, description } = req.body;
-
-//   // Ensure description is included in the request body when creating a task
-//   if (!description) {
-//     return res.status(400).json({ error: 'Task description is required' });
-//   }
-
-//   const { rows } = await db.query(
-//     `INSERT INTO social_tasks (platform, type, url, reward, expires_at, description)
-//      VALUES ($1, $2, $3, $4, $5, $6)
-//      RETURNING *`,
-//     // Add description to the parameters array
-//     [platform, type, url, reward, expiresAt || null, description]
-//   );
-//   res.json(rows[0]);
-// };

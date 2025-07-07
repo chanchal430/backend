@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { db } from '../../config/db';
 
-export const telegramLogin = async (req: any, res: any) => {
+export const telegramLogin = async (req: Request, res: Response) => {
   const botToken = process.env.TELEGRAM_BOT_TOKEN!;
   const isDev = process.env.NODE_ENV === 'development';
 
@@ -11,7 +11,8 @@ export const telegramLogin = async (req: any, res: any) => {
     const { initData } = req.body;
 
     if (!initData) {
-      return res.status(400).json({ error: 'Missing initData' });
+      res.status(400).json({ error: 'Missing initData' });
+      return;
     }
 
     const params = new URLSearchParams(initData);
@@ -34,7 +35,7 @@ export const telegramLogin = async (req: any, res: any) => {
 
     // SKIP HASH CHECK IN DEVELOPMENT MODE
     if (!isDev && calculatedHash !== receivedHash) {
-      return res.status(403).json({
+      res.status(403).json({
         error: 'Invalid hash: Untrusted data',
         detail: {
           receivedHash,
@@ -42,11 +43,13 @@ export const telegramLogin = async (req: any, res: any) => {
           dataCheckString
         }
       });
+      return;
     }
 
     const userJson = params.get('user');
     if (!userJson) {
-      return res.status(400).json({ error: 'User data missing' });
+      res.status(400).json({ error: 'User data missing' });
+      return;
     }
 
     const telegramUser = JSON.parse(decodeURIComponent(userJson));
@@ -88,11 +91,11 @@ export const telegramLogin = async (req: any, res: any) => {
       { expiresIn: '7d' }
     );
 
-    return res.json({ accessToken, user });
+    res.json({ accessToken, user });
 
   } catch (err) {
     console.error('Telegram login failed:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 

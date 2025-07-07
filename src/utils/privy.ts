@@ -45,14 +45,14 @@
 //   });
 // }
 
-import { PrivyClient } from '@privy-io/server-auth';
+// import { PrivyClient } from '@privy-io/server-auth';
 
-// Initialize Privy client with App ID and App Secret
-const PRIVY_APP_ID     = process.env.PRIVY_APP_ID!;
-const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET!;
+// // Initialize Privy client with App ID and App Secret
+// const PRIVY_APP_ID     = process.env.PRIVY_APP_ID!;
+// const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET!;
 
-if (!PRIVY_APP_ID || !PRIVY_APP_SECRET) {
-  throw new Error('Missing PRIVY_APP_ID or PRIVY_APP_SECRET');
-}
+// if (!PRIVY_APP_ID || !PRIVY_APP_SECRET) {
+//   throw new Error('Missing PRIVY_APP_ID or PRIVY_APP_SECRET');
+// }
 
-export const privy = new PrivyClient(PRIVY_APP_ID, PRIVY_APP_SECRET);
+// export const privy = new PrivyClient(PRIVY_APP_ID, PRIVY_APP_SECRET);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getTasks, completeTask, createTask } from './tasks.controller';
 import { requireAdmin } from '../../middlewares/requireAdmin.middleware';
-import { requirePrivyAuth } from '../../middlewares/requirePrivyAuth';
+// import { requirePrivyAuth } from '../../middlewares/requirePrivyAuth';
 import { requireTelegramAuth } from '../../middlewares/requireAuth';
 
 const router = Router();

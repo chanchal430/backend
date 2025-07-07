@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { claimReferral } from './referral.controller';
-import { requirePrivyAuth } from '../../middlewares/requirePrivyAuth';
+import { requireTelegramAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
-router.post('/claim', requirePrivyAuth, claimReferral);
+router.post('/claim', requireTelegramAuth, claimReferral);
 export default router;
