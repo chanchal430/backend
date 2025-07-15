@@ -1,54 +1,56 @@
-import { Request, Response } from 'express';
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
-import { db } from '../../config/db';
+import type { Request, Response } from "express";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import { db } from "../../config/db";
 
 export const telegramLogin = async (req: Request, res: Response) => {
   const botToken = process.env.TELEGRAM_BOT_TOKEN!;
-  const isDev = process.env.NODE_ENV === 'development';
+  const isDev = process.env.NODE_ENV === "development";
 
   try {
     const { initData } = req.body;
 
     if (!initData) {
-      res.status(400).json({ error: 'Missing initData' });
+      res.status(400).json({ error: "Missing initData" });
       return;
     }
 
     const params = new URLSearchParams(initData);
-    const receivedHash = params.get('hash');
-    params.delete('hash');
-    params.delete('signature');
+    const receivedHash = params.get("hash");
+    params.delete("hash");
+    params.delete("signature");
 
     const dataCheckArray = Array.from(params.entries())
       .map(([key, value]) => `${key}=${decodeURIComponent(value)}`)
       .sort((a, b) => a.localeCompare(b));
-    const dataCheckString = dataCheckArray.join('\n');
+    const dataCheckString = dataCheckArray.join("\n");
 
-    const secretKey = crypto.createHmac('sha256', 'WebAppData')
+    const secretKey = crypto
+      .createHmac("sha256", "WebAppData")
       .update(botToken)
       .digest();
 
-    const calculatedHash = crypto.createHmac('sha256', secretKey)
+    const calculatedHash = crypto
+      .createHmac("sha256", secretKey)
       .update(dataCheckString)
-      .digest('hex');
+      .digest("hex");
 
     // SKIP HASH CHECK IN DEVELOPMENT MODE
     if (!isDev && calculatedHash !== receivedHash) {
       res.status(403).json({
-        error: 'Invalid hash: Untrusted data',
+        error: "Invalid hash: Untrusted data",
         detail: {
           receivedHash,
           calculatedHash,
-          dataCheckString
-        }
+          dataCheckString,
+        },
       });
       return;
     }
 
-    const userJson = params.get('user');
+    const userJson = params.get("user");
     if (!userJson) {
-      res.status(400).json({ error: 'User data missing' });
+      res.status(400).json({ error: "User data missing" });
       return;
     }
 
@@ -56,7 +58,7 @@ export const telegramLogin = async (req: Request, res: Response) => {
 
     let user;
     const { rows: existingUsers } = await db.query(
-      'SELECT * FROM users WHERE telegram_id = $1',
+      "SELECT * FROM users WHERE telegram_id = $1",
       [telegramUser.id]
     );
 
@@ -67,7 +69,7 @@ export const telegramLogin = async (req: Request, res: Response) => {
           telegramUser.first_name,
           telegramUser.last_name,
           telegramUser.username,
-          telegramUser.id
+          telegramUser.id,
         ]
       );
       user = updateRes.rows[0];
@@ -79,23 +81,19 @@ export const telegramLogin = async (req: Request, res: Response) => {
           telegramUser.id,
           telegramUser.first_name,
           telegramUser.last_name,
-          telegramUser.username
+          telegramUser.username,
         ]
       );
       user = insertRes.rows[0];
     }
 
-    const accessToken = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
+    const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
 
     res.json({ accessToken, user });
-
   } catch (err) {
-    console.error('Telegram login failed:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Telegram login failed:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
