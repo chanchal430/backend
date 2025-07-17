@@ -1,6 +1,12 @@
-import { Pool } from 'pg';
+// config/db.ts
+import { Pool } from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const db = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 5,
+  ssl: {
+    rejectUnauthorized: false, // Needed for Railway managed PostgreSQL
+  },
 });

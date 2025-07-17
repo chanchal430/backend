@@ -6,8 +6,13 @@ import { requireTelegramAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/', requireTelegramAuth, getTasks);                         
-router.post('/', requireTelegramAuth, requireAdmin, createTask);        
-router.post('/:id/complete', requireTelegramAuth, completeTask);        
+// Get all tasks
+router.get('/', requireTelegramAuth, getTasks);
+
+// Create a new task (admin only)
+router.post('/', requireTelegramAuth, requireAdmin, createTask);
+
+// Complete a task by ID
+router.post('/:id/complete', requireTelegramAuth, completeTask);
 
 export default router;
